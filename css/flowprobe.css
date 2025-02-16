@@ -1,0 +1,93 @@
+html, body {height:100%;}
+html {display:table; width:100%;}
+body {display:table-cell; text-align:center; vertical-align:middle;}
+
+text {
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+svg {
+    border: 1px solid red;
+}
+
+circle:hover {
+    transition: stroke-width 0.3s;
+    stroke-width: 6px;
+}
+
+.arc {
+    stroke-width: 5px;
+    stroke: white;
+}
+
+.arc-label {
+    font-weight: 600;
+    text-transform: lowercase;
+    text-anchor: middle;
+}
+
+.gateway-icon {
+    fill: white;
+    stroke-width: 4;
+    stroke: white;
+}
+
+.service-captions {
+}
+
+.gateway-icon {
+    text-anchor: middle;
+    font-family: "Font Awesome 5 Brands", serif;
+    stroke-width: 12px;
+}
+
+.source-title {
+    text-anchor: middle;
+}
+
+.source-title textPath {
+    font-size: 16px;
+    text-transform: uppercase;
+
+}
+
+.service-throughput {
+
+}
+
+.service-throughput text {
+
+    font-size: 22px;
+
+}
+
+.service-throughput-unit text {
+
+    font-size: 12px;
+    font-weight: lighter;
+
+}
+
+.service-wrapper {
+    fill: white;
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+
+}
+
+#journal {
+
+}
+
+#journal text {
+    font-weight: normal;
+    text-anchor: middle;
+}
+
+
+
+#raspberrypi {
+    stroke: black;
+    stroke-width: .1;
+}

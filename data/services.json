@@ -1,0 +1,30 @@
+[
+  {
+    "name" : "Orders",
+    "color" : "navy",
+    "children" : [
+      "order-service-hj66k88-abc123",
+      "order-service-hj66k88-abc456",
+      "order-service-hj66k88-xyz123",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456",
+      "order-service-hj66k88-xyz456"
+    ],
+    "center" : [1, 1]
+  },
+  {
+    "name" : "Payments",
+    "color" : "#99CC99",
+    "children" : [
+      "payment-service-hj66k88-abc123",
+      "payment-service-hj66k88-abc456",
+      "payment-service-hj66k88-xyz123",
+      "payment-service-hj66k88-xyz456"
+    ],
+    "center" : [1, 0]
+  }
+]

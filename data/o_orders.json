@@ -1,0 +1,68 @@
+{
+    "mobile": {
+        "name": "mobile",
+        "color": "#C1DAD6",
+        "children": {
+            "ios": {
+                "name": "ios",
+                "faName": "apple",
+                "color": "#BC986A",
+                "parent" : "mobile",
+                "faUnicode": "\uf179",
+                "value": 342
+            },
+            "android": {
+                "name": "android",
+                "faName": "android",
+                "color": "#DAAD86",
+                "parent" : "mobile",
+                "faUnicode": "\uf17b",
+                "value": 53
+            }
+        }
+    },
+    "desktop": {
+        "name": "desktop",
+        "color": "#357eac",
+        "children": {
+            "chrome": {
+                "name": "chrome",
+                "faName": "chrome",
+                "color": "#659DBD",
+                "parent" : "desktop",
+                "faUnicode": "\uf268",
+                "value": 112
+            },
+            "safari": {
+                "name": "safari",
+                "faName": "safari",
+                "color": "#659DBD",
+                "parent" : "desktop",
+                "value": 24,
+                "faUnicode": "\uf267"
+            }
+        }
+    },
+    "retail": {
+        "name": "retail",
+        "color": "#7D9C9F",
+        "children": {
+            "windows": {
+                "name": "windows",
+                "color": "#8D8741",
+                "faUnicode": "\uf17a",
+                "faName": "windows",
+                "parent" : "retail",
+                "value": 24
+            },
+            "linux": {
+                "value": 124,
+                "name": "linux",
+                "faName": "linux",
+                "color": "#8D8741",
+                "parent" : "retail",
+                "faUnicode": "\uf7bb"
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+[
+  {
+    "name": "cards",
+    "color": "#9e9e93",
+    "children": [
+      {
+        "name": "visa",
+        "faName": "visa",
+        "color" : "#BC986A",
+        "parent" : "cards",
+        "faUnicode": "\uf179",
+        "value": 342
+      },
+      {
+        "name": "mastercard",`
+        "faName": "mastercard",
+        "color" : "#DAAD86",
+        "parent" : "cards",
+        "faUnicode": "\uf17b",
+        "value": 53
+      }
+    ]
+  },
+  {
+    "name": "provider",
+    "color": "#d5ccb8",
+    "children": [
+      {
+        "name": "paypal",
+        "faName": "paypal",
+        "color": "#659DBD",
+        "parent" : "provider",
+        "faUnicode": "\uf268",
+        "value": 112
+      },
+      {
+        "name": "stripe",
+        "faName": "stripe",
+        "color": "#659DBD",
+        "parent" : "provider",
+        "value": 24,
+        "faUnicode": "\uf267"
+      },
+      {
+        "value": 17,
+        "name": "amazon-pay",
+        "faName": "amazon-pay",
+        "color": "#8D8741",
+        "parent" : "provider",
+        "faUnicode": "\uf7bb"
+      }
+    ]
+  },
+  {
+    "name": "platform",
+    "color": "#73775f",
+    "children": [
+      {
+        "name": "apple-pay",
+        "color": "#8D8741",
+        "parent" : "platform",
+        "faUnicode": "\uf17a",
+        "faName": "apple-pay",
+        "value": 87
+      },
+      {
+        "value": 17,
+        "name": "google-pay",
+        "faName": "google-pay",
+        "parent" : "platform",
+        "color": "#8D8741",
+        "faUnicode": "\uf7bb"
+      }
+    ]
+  }
+]

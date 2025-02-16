@@ -1,0 +1,69 @@
+[
+  {
+    "name": "mobile",
+    "color": "darkgrey",
+    "children": [
+      {
+        "name": "ios",
+        "faName": "apple",
+        "color" : "#BC986A",
+        "faUnicode": "\uf179",
+        "value": 342
+      },
+      {
+        "name": "android",
+        "faName": "android",
+        "color" : "#DAAD86",
+        "faUnicode": "\uf17b",
+        "value": 53
+      }
+    ]
+  },
+  {
+    "name": "desktop",
+    "color": "darkcyan",
+    "children": [
+      {
+        "name": "chrome",
+        "faName": "chrome",
+        "color": "#659DBD",
+        "faUnicode": "\uf268",
+        "value": 112
+      },
+      {
+        "name": "safari",
+        "faName": "safari",
+        "color": "#659DBD",
+        "value": 24,
+        "faUnicode": "\uf267"
+      }
+    ]
+  },
+  {
+    "name": "retail",
+    "color": "darkolivegreen",
+    "children": [
+      {
+        "name": "windows",
+        "color": "#8D8741",
+        "faUnicode": "\uf17a",
+        "faName": "windows",
+        "value": 87
+      },
+      {
+        "value": 17,
+        "name": "raspberrypi",
+        "faName": "raspberry-pi",
+        "color": "#8D8741",
+        "faUnicode": "\uf7bb"
+      },
+      {
+        "value": 4,
+        "name": "arduino",
+        "faName": "arduino",
+        "color": "#8D8741",
+        "faUnicode": "\uf7bb"
+      }
+    ]
+  }
+]

@@ -1,0 +1,76 @@
+{
+    "cards": {
+        "name": "cards",
+        "color": "#CBD5C0",
+        "children": {
+            "visa": {
+                "name": "visa",
+                "faName": "visa",
+                "color": "#BC986A",
+                "parent" : "cards",
+                "faUnicode": "\uf179",
+                "value": 342
+            },
+            "mastercard": {
+                "name": "mastercard",
+                "faName": "mastercard",
+                "color": "#DAAD86",
+                "parent" : "cards",
+                "faUnicode": "\uf17b",
+                "value": 83
+            },
+            "amex": {
+                "name": "amex",
+                "faName": "amex",
+                "color": "#DAAD86",
+                "parent" : "cards",
+                "faUnicode": "\uf17b",
+                "value": 33
+            }
+        }
+    },
+    "provider": {
+        "name": "provider",
+        "color": "#9CAF88",
+        "children": {
+            "paypal": {
+                "name": "paypal",
+                "faName": "paypal",
+                "color": "#659DBD",
+                "parent" : "provider",
+                "faUnicode": "\uf268",
+                "value": 112
+            },
+            "stripe": {
+                "name": "stripe",
+                "faName": "stripe",
+                "color": "#659DBD",
+                "parent" : "provider",
+                "value": 44,
+                "faUnicode": "\uf267"
+            }
+        }
+    },
+    "wallet": {
+        "name": "wallet",
+        "color": "#758467",
+        "children": {
+            "apple-pay": {
+                "name": "apple-pay",
+                "color": "#8D8741",
+                "faUnicode": "\uf17a",
+                "faName": "apple-pay",
+                "parent" : "wallet",
+                "value": 87
+            },
+            "google-pay": {
+                "value": 17,
+                "name": "google-pay",
+                "faName": "google-pay",
+                "color": "#8D8741",
+                "parent" : "wallet",
+                "faUnicode": "\uf7bb"
+            }
+        }
+    }
+}
