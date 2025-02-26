@@ -1,38 +1,10 @@
-import { FlowProbe } from "./fp.js";
-import { FpUtil as Util } from "./fp-util.js";
+import { FlowProbe } from "./fp/fp.js";
+import { FpUtil as Util } from "./fp/fp-util.js";
 
 const { d3 } = window;
 
-
-
 const svg = d3.select("svg");
 const flowProbe = new FlowProbe(svg);
-
-function raspberryPiOffspring() {
-    return {
-        kind: "order",
-        type: "retail",
-        name: "raspberrypi",
-        value: Util.randomInteger(2, 50)
-    }
-}
-
-function randomOffspring(kind, source) {
-
-    let array = Object.keys(source);
-    let randomType = array[Math.floor(Math.random() * array.length)];
-    let type = source[randomType];
-
-    let children = Object.values(type.children);
-    let child = children[Math.floor(Math.random() * children.length)];
-
-    return {
-        kind: kind,
-        type: type.name,
-        name: child.name,
-        value: Util.randomInteger(2, 50)
-    }
-}
 
 let fullData = {};
 
@@ -65,7 +37,9 @@ Promise.all([
     flowProbe.initScales();
     flowProbe.submitData(orders, payments);
     flowProbe.drawOrdersAndPaymentsSample(orders, payments, services);
-    flowProbe.runSumulation();
+
+    // flowProbe.runSimulation("user");
+    flowProbe.runSimulation("manual");
 
     setInterval(() => {
         flowProbe.update();
@@ -99,7 +73,8 @@ Promise.all([
 
     d3.select("#journal-trigger").on("click", () => {
         console.log(`Journaling`);
-        flowProbe.journalInfo(Util.randomHash(6));
+        // flowProbe.journalInfo("Here comes the rooster");
+        flowProbe.journalScale("Orders", -2);
     });
 
 });

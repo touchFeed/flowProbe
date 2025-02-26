@@ -3,9 +3,8 @@ import { FpUtil as Util } from "./fp-util.js"
 import { FPGateway as Gateway } from "./fp-gateway.js"
 import { FPService as Service } from "./fp-service.js"
 import { FPJournal as Journal } from "./fp-journal.js"
+
 const { d3 } = window;
-
-
 
 class FlowProbe {
 
@@ -34,49 +33,15 @@ class FlowProbe {
 
     // simulation
     rateOrder = {
-        retail: 500,
-        mobile: 500,
-        desktop: 500
+        retail: 1000,
+        mobile: 1000,
+        desktop: 1000
     };
     ratePayment = {
-        cards: 500,
-        wallet: 500,
-        provider: 500
+        cards: 1000,
+        wallet: 1000,
+        provider: 1000
     };
-
-    randomOffspring = (kind, source) => {
-
-        let children = Object.values(source.children);
-        let child = children[Math.floor(Math.random() * children.length)];
-
-        return {
-            kind: kind,
-            type: source.name,
-            name: child.name,
-            value: Util.randomInteger(2, 50)
-        }
-    }
-
-    handleKeyboardShortcuts = e => {
-        switch (e.key) {
-            
-            case "q":   this.rateOrder.mobile += 10;                                            break;
-            case "a":   if (this.rateOrder.mobile > 10) this.rateOrder.mobile -= 10;            break;
-            case "w":   this.rateOrder.desktop += 10;                                           break;
-            case "s":   if (this.rateOrder.desktop > 10) this.rateOrder.desktop -= 10;          break;
-            case "e":   this.rateOrder.retail += 10;                                            break;
-            case "d":   if (this.rateOrder.retail > 10) this.rateOrder.retail -= 10;            break;
-            
-            case "p":   this.ratePayment.cards += 10;                                           break;
-            case "l":   if (this.ratePayment.cards > 10) this.ratePayment.cards -= 10;          break;
-            case "o":   this.ratePayment.provider += 10;                                        break;
-            case "k":   if (this.ratePayment.provider > 10) this.ratePayment.provider -= 10;    break;
-            case "i":   this.ratePayment.wallet += 10;                                          break;
-            case "j":   if (this.ratePayment.wallet > 10) this.ratePayment.wallet -= 10;        break;
-
-            default: break;
-        }
-    }
 
     getGatewayInstance = name => name === "order"
         ? this.gatewayOrders
@@ -132,38 +97,65 @@ class FlowProbe {
 
         // Journal
         this.journal.drawBase();
-        this.journal.append("FlowProbe started")
     }
 
-    runSumulation() {
+    runSimulation(simulationKind) {
+
+        this.journal.addEntry("flowProbe started");
 
         let randomOrder = type => {
             let source = this.counters.order[type];
-            this.spawn(this.randomOffspring("order", source));
-            setTimeout(() => randomOrder(type), Util.randomInteger(.1 * this.rateOrder[type], this.rateOrder[type]));
+            let offspring = Util.randomOffspring("order", source);
+            this.spawn(offspring);
+            let delay = Util.randomInteger(.1 * this.rateOrder[type], this.rateOrder[type]);
+            setTimeout(() => randomOrder(type), delay);
         }
-        
         let randomPayment = type => {
             let source = this.counters.payment[type];
-            this.spawn(this.randomOffspring("payment", source));
-            setTimeout(() => randomPayment(type), Util.randomInteger(.1 * this.ratePayment[type], this.ratePayment[type]));
+            let offspring = Util.randomOffspring("payment", source);
+            this.spawn(offspring);
+            let delay = Util.randomInteger(.1 * this.ratePayment[type], this.ratePayment[type]);
+            setTimeout(() => randomPayment(type), delay);
         }
+        ["mobile", "desktop", "retail"].forEach(type => randomOrder(type));
+        ["cards", "provider", "wallet"].forEach(type => randomPayment(type));
 
-        ["mobile", "desktop", "retail"].forEach((type) => randomOrder(type));
-        ["cards", "provider", "wallet"].forEach((type) => randomPayment(type));
-        
-        document.onkeydown = this.handleKeyboardShortcuts; // assign shortcuts for increase/decrease rates
+        if (simulationKind === "user") {                //          setting the rates by user (via keyboard shortcuts)
+            document.onkeydown = this.handleKeyboardShortcuts;
+        } else if (simulationKind === "manual") {       //          here assign manual delays for "telling a story"
+            this.handleManualSimulation();
+        } else if (simulationKind === "server") {
+            // SSE or WS pushing socket provided by server
+        }
+    }
+
+    handleManualSimulation() {
+
+        setTimeout(() => {
+            this.rateOrder.retail -= 200;
+            this.journalInfo("Awaiting expected increase from retail")
+        }, 5000);
+
+        setTimeout(() => this.rateOrder.retail -= 300, 6000);
+        setTimeout(() => this.rateOrder.retail -= 300, 6500);
+        setTimeout(() => this.rateOrder.retail -= 150, 7000);
+        setTimeout(() => {
+            console.log("Scale up orders")
+            this.journalScale("order", 2);
+            this.addOrderServiceNode(Util.randomHash(10))
+            this.addOrderServiceNode(Util.randomHash(10))
+        }, 15000);
+        setTimeout(() => this.rateOrder.retail += 600, 25000);
+
+        setTimeout(() => this.rateOrder.mobile -= 600, 26000);
+        setTimeout(() => this.rateOrder.desktop -= 700, 26000);
+
+
+
     }
 
     update() {
-        //
-        // ['order', 'payment'].forEach(kind => {
-        //     let current = this.calculatePerSecond(this.counters[kind]);
-        //     console.log(current);
-        // });
-
         let metrics = this.counters;
-
         this.gatewayOrders.updateSnapshot = metrics.order;
         this.gatewayPayments.updateSnapshot = metrics.payment;
         this.gatewayOrders.update();
@@ -176,15 +168,9 @@ class FlowProbe {
 
         let kind = obj.kind;
         let gateway = this.getGatewayInstance(kind);
-
         let spawnConfig = gateway.getSpawnConfig(obj.name);
-        let angle = spawnConfig.angle;
-        // let amplitude = Util.randomInteger(spawnConfig.angle * .2, spawnConfig.angle * 1.1) / Math.PI;
-        // let amplitude = spawnConfig.amplitude;
-        // amplitude = 0; // TODO !
-        // console.log(`spawning: ${angle} and amplitude: ${amplitude}`);
-
         let distance = .95 * gateway.radius; // represents how far from the centre the spawn occurs
+        let angle = Util.randomFloat(spawnConfig.range[0], spawnConfig.range[1]);
         obj.point = d3.pointRadial(angle, distance);
 
         let eden = gateway.eden;
@@ -223,15 +209,33 @@ class FlowProbe {
     }
 
     journalInfo(statement) {
-        this.journal.append(statement);
+        this.journal.addEntry(statement);
     }
 
     journalScale(entity, factor) {
-        let direction = factor < 0 ? 'down' : 'up';
-        let statement = `Scaling <tspan>${direction} (${factor})</tspan> ${entity}`;
-        this.journal.append(statement);
+        this.journal.addEntry(`${Util.capitalize(entity)} scale `, factor);
     }
 
+    handleKeyboardShortcuts = e => {
+        switch (e.key) {
+
+            case "q":   this.rateOrder.mobile += 10;                                       break;
+            case "a":   if (this.rateOrder.mobile > 10) this.rateOrder.mobile -= 10;            break;
+            case "w":   this.rateOrder.desktop += 10;                                      break;
+            case "s":   if (this.rateOrder.desktop > 10) this.rateOrder.desktop -= 10;          break;
+            case "e":   this.rateOrder.retail += 10;                                       break;
+            case "d":   if (this.rateOrder.retail > 10) this.rateOrder.retail -= 10;            break;
+
+            case "p":   this.ratePayment.cards += 10;                                           break;
+            case "l":   if (this.ratePayment.cards > 10) this.ratePayment.cards -= 10;          break;
+            case "o":   this.ratePayment.provider += 10;                                        break;
+            case "k":   if (this.ratePayment.provider > 10) this.ratePayment.provider -= 10;    break;
+            case "i":   this.ratePayment.wallet += 10;                                          break;
+            case "j":   if (this.ratePayment.wallet > 10) this.ratePayment.wallet -= 10;        break;
+
+            default: break;
+        }
+    }
 
 }
 

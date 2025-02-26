@@ -39,7 +39,7 @@ class FPJournal {
             .attr("transform", Config.translate(0.5, 0, 0.5, 0));
     }
 
-    append(statement) {
+    addEntry(statement, factor) {
 
         let selection = this.wrapper
             .selectAll(`text`)
@@ -63,15 +63,24 @@ class FPJournal {
             .attr("fill", "black")
             .attr("x", 0)
             .attr("y", -15)
-            .style("opacity", "0")
+            .style("opacity", "0");
 
+        if (factor) {
+            let direction = factor < 0 ? "down" : "up";
+            texts
+                .append("tspan")
+                .attr("class", direction)
+                .text(`${direction}(${Math.abs(factor)})`);
+        }
+
+        texts
             .transition()
             .duration(800)
             // .attr("y", (d, i) => i++ * 25)
             .attr("y", 5)
             .style("opacity", "1")
 
-            .on("end", () => setTimeout(() => finish(), 2000))
+            .on("end", () => setTimeout(() => finish(), 4000))
 
             .selection().merge(selection);  // 1. Merge stored update into enter selection.
     }

@@ -1,5 +1,4 @@
 import {FpConfig as Config} from "./fp-config.js";
-import {FpUtil as Util} from "./fp-util.js";
 
 const { d3 } = window;
 
@@ -201,6 +200,7 @@ class FPGateway {
                     angle: angle,
                     radius: circlesRadius,
                     parent: child.parent,
+                    range: [arc.startAngle, arc.endAngle],
                     amplitude: distance(child) / 2,
                     color: inputSource.color // all children within the arc have the same circle colors
                 };
@@ -309,10 +309,9 @@ class FPGateway {
                 // let anglePad = stepAngle * .45;
                 let step = ++i * stepAngle;
                 let angle = arc.startAngle + step;
-                // let amplitude = Util.randomFloat(angle * .1, angle * .4);
                 s.point = d3.pointRadial(angle, circlesRadius);
                 spawning[s.name].angle = angle;
-                // spawning[s.name].amplitube = amplitude;
+                spawning[s.name].range = [arc.startAngle, arc.endAngle];
                 sources.push(s);
             });
 

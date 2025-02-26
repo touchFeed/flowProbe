@@ -1,5 +1,3 @@
-// const { d3 } = window;
-
 class FpUtil {
 
     static randomInteger(min, max) {
@@ -20,6 +18,23 @@ class FpUtil {
             counter += 1;
         }
         return result;
+    }
+
+    static capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    static randomOffspring(kind, source) {
+
+        let children = Object.values(source.children);
+        let child = children[Math.floor(Math.random() * children.length)];
+
+        return {
+            kind: kind,
+            type: source.name,
+            name: child.name,
+            value: FpUtil.randomInteger(2, 50)
+        }
     }
 
     static sumSourcesValues(data) {
