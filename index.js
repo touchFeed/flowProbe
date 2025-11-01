@@ -1,5 +1,5 @@
 import { FlowProbe } from "./fp/fp.js";
-import { FpUtil as Util } from "./fp/fp-util.js";
+import { FPSimulate as Simulation } from "./fp/fp-simulate.js";
 
 const { d3 } = window;
 
@@ -11,7 +11,7 @@ let fullData = {};
 //                                                              report start summary
 
 const printDeltas = counter => {
-    let array = Array.isArray(counter) ? counter : Object.keys(counter).map(key => counter[key]);
+    let array = Array.isArray(counter1) ? counter : Object.keys(counter).map(key => counter[key]);
     array.forEach((kind, k) => {
         array[k].children
                 .forEach((type, t) => {
@@ -38,8 +38,25 @@ Promise.all([
     flowProbe.submitData(orders, payments);
     flowProbe.drawOrdersAndPaymentsSample(orders, payments, services);
 
+    let simulation = new Simulation(flowProbe, orders, payments);
+    simulation.startSimulation(); // starts with random spawns of different offsprings
+    simulation.playStory(); // starts with random spawns of different offsprings
+    document.onkeydown = simulation.handleKeyboardShortcuts; // adjusting rates by user (via keyboard shortcuts)
+
     // flowProbe.runSimulation("user");
-    flowProbe.runSimulation("manual");
+    // flowProbe.runSimulation("manual");
+
+    //
+    let source = new EventSource("http://0.0.0.0:8080/stream");
+    source.onmessage = function(event) {
+        let message = JSON.parse(event.data);
+        simulation.handleSSEMessage(message);
+    };
+
+    source.onerror = function(event) {
+        console.log("SSE connection error", event);
+        source.close();
+    };
 
     setInterval(() => {
         flowProbe.update();
@@ -49,32 +66,7 @@ Promise.all([
     // temporary handles for services
     // Kubernetes style of namespacing pods
 
-    d3.select("#add-order").on("click", () => {
-        let id = `order-service-${Util.randomHash(7)}-${Util.randomHash("6")}`;
-        console.log("Adding new Node to Orders : " + id);
-        flowProbe.addOrderServiceNode(id);
-    });
-
-    d3.select("#remove-order").on("click", () => {
-        console.log(`Removing node from Orders`);
-        flowProbe.removeOrderServiceNode();
-    });
-
-    d3.select("#add-payment").on("click", () => {
-        let id = `payment-service-${Util.randomHash(7)}-${Util.randomHash("6")}`;
-        console.log("Adding new Node to Payments : " + id);
-        flowProbe.addPaymentServiceNode(id);
-    });
-
-    d3.select("#remove-payment").on("click", () => {
-        console.log(`Removing node from Payments`);
-        flowProbe.removePaymentServiceNode();
-    });
-
-    d3.select("#journal-trigger").on("click", () => {
-        console.log(`Journaling`);
-        // flowProbe.journalInfo("Here comes the rooster");
-        flowProbe.journalScale("Orders", -2);
-    });
-
 });
+
+window.onfocus = () => console.log("focus");
+window.onblur = () => console.log("blur");

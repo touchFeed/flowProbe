@@ -1,69 +1,51 @@
-import { FpConfig as Config } from "./fp-config.js"
-import { FpUtil as Util } from "./fp-util.js"
-import { FPGateway as Gateway } from "./fp-gateway.js"
-import { FPService as Service } from "./fp-service.js"
-import { FPJournal as Journal } from "./fp-journal.js"
+import {FpConfig as Config} from "./fp-config.js"
+import {FPGateway as Gateway} from "./fp-gateway.js"
+import {FPService as Service} from "./fp-service.js"
+import {FPJournal as Journal} from "./fp-journal.js"
+import {FpUtil as Util} from "./fp-util.js"
 
 const { d3 } = window;
 
 class FlowProbe {
 
-    gatewayOrders;
-    gatewayPayments;
+    //                                                                  Entities
+    gateways = {};
+    services = {};
 
-    serviceOrders;
-    servicePayments;
-
+    //                                                                  Journal & Data
     journal;
+    counters;
 
-    // main SVG element
+    //                                                                  Main SVG element
     svg;
-    
-    // dimensions
+
+    //                                                                  Dimensions
     width;
     height;
 
-    // scales
+    //                                                                  Scales
     x;
     y;
     inputSourceScale = d3.scaleLinear().domain([0, 50]).range([2, 12]);
 
-    // data
-    counters;
-
-    // simulation
-    rateOrder = {
-        retail: 1000,
-        mobile: 1000,
-        desktop: 1000
-    };
-    ratePayment = {
-        cards: 1000,
-        wallet: 1000,
-        provider: 1000
-    };
-
-    getGatewayInstance = name => name === "order"
-        ? this.gatewayOrders
-        : this.gatewayPayments;
-
-    constructor(svgElement) {
-        this.svg = svgElement;
+    constructor(svg) {
+        this.svg = svg;
 
         // main area (excluding margins)
         let margin = Config.MARGIN;
-        let width = svgElement.attr("width");
-        let height = svgElement.attr("height");
+        let width = svg.attr("width");
+        let height = svg.attr("height");
         this.width = width - margin.left - margin.right;
         this.height = height - margin.top - margin.bottom;
 
-        this.gatewayOrders = new Gateway("orders", svgElement);
-        this.gatewayPayments = new Gateway("payments", svgElement);
+        // create Orders & Payments arrangement
+        this.journal = new Journal(svg);
+        this.gateways.order = new Gateway("orders", svg);
+        this.gateways.payment = new Gateway("payments", svg);
+        this.services.order = new Service("orders", svg);
+        this.services.payment = new Service("payments", svg);
 
-        this.serviceOrders = new Service("orders", svgElement);
-        this.servicePayments = new Service("payments", svgElement);
-
-        this.journal = new Journal(svgElement);
+        console.log(`Constructed fP skeleton as ${width}x${height}`);
     }
 
     submitData(orders, payments) {
@@ -88,86 +70,31 @@ class FlowProbe {
     drawOrdersAndPaymentsSample(orders, payments, services) {
 
         // Gateways
-        this.gatewayOrders.createGateway("orders", orders, 'north', {x: .5, y: .7});
-        this.gatewayPayments.createGateway("payments", payments, 'south', {x: .5, y: .3});
+        this.gateways.order.createGateway("orders", orders, 'north', {x: .5, y: .7});
+        this.gateways.payment.createGateway("payments", payments, 'south', {x: .5, y: .3});
 
         // Services
-        this.serviceOrders.appendService(services.orders, {x: .5, y: .7})
-        this.servicePayments.appendService(services.payments, {x: .5, y: .3})
+        this.services.order.appendService(services.orders, {x: .5, y: .7})
+        this.services.payment.appendService(services.payments, {x: .5, y: .3})
 
         // Journal
-        this.journal.drawBase();
-    }
-
-    runSimulation(simulationKind) {
-
-        this.journal.addEntry("flowProbe started");
-
-        let randomOrder = type => {
-            let source = this.counters.order[type];
-            let offspring = Util.randomOffspring("order", source);
-            this.spawn(offspring);
-            let delay = Util.randomInteger(.1 * this.rateOrder[type], this.rateOrder[type]);
-            setTimeout(() => randomOrder(type), delay);
-        }
-        let randomPayment = type => {
-            let source = this.counters.payment[type];
-            let offspring = Util.randomOffspring("payment", source);
-            this.spawn(offspring);
-            let delay = Util.randomInteger(.1 * this.ratePayment[type], this.ratePayment[type]);
-            setTimeout(() => randomPayment(type), delay);
-        }
-        ["mobile", "desktop", "retail"].forEach(type => randomOrder(type));
-        ["cards", "provider", "wallet"].forEach(type => randomPayment(type));
-
-        if (simulationKind === "user") {                //          setting the rates by user (via keyboard shortcuts)
-            document.onkeydown = this.handleKeyboardShortcuts;
-        } else if (simulationKind === "manual") {       //          here assign manual delays for "telling a story"
-            this.handleManualSimulation();
-        } else if (simulationKind === "server") {
-            // SSE or WS pushing socket provided by server
-        }
-    }
-
-    handleManualSimulation() {
-
-        setTimeout(() => {
-            this.rateOrder.retail -= 200;
-            this.journalInfo("Awaiting expected increase from retail")
-        }, 5000);
-
-        setTimeout(() => this.rateOrder.retail -= 300, 6000);
-        setTimeout(() => this.rateOrder.retail -= 300, 6500);
-        setTimeout(() => this.rateOrder.retail -= 150, 7000);
-        setTimeout(() => {
-            console.log("Scale up orders")
-            this.journalScale("order", 2);
-            this.addOrderServiceNode(Util.randomHash(10))
-            this.addOrderServiceNode(Util.randomHash(10))
-        }, 15000);
-        setTimeout(() => this.rateOrder.retail += 600, 25000);
-
-        setTimeout(() => this.rateOrder.mobile -= 600, 26000);
-        setTimeout(() => this.rateOrder.desktop -= 700, 26000);
-
-
-
+        this.journal.drawBase({x: .5, y: .5});
     }
 
     update() {
         let metrics = this.counters;
-        this.gatewayOrders.updateSnapshot = metrics.order;
-        this.gatewayPayments.updateSnapshot = metrics.payment;
-        this.gatewayOrders.update();
-        this.gatewayPayments.update();
-        this.serviceOrders.update(metrics.order);
-        this.servicePayments.update(metrics.payment);
+        this.gateways.order.updateSnapshot = metrics.order;
+        this.gateways.payment.updateSnapshot = metrics.payment;
+        this.gateways.order.update();
+        this.gateways.payment.update();
+        this.services.order.update(metrics.order);
+        this.services.payment.update(metrics.payment);
     }
 
     spawn(obj) {
 
         let kind = obj.kind;
-        let gateway = this.getGatewayInstance(kind);
+        let gateway = this.gateways[kind];
         let spawnConfig = gateway.getSpawnConfig(obj.name);
         let distance = .95 * gateway.radius; // represents how far from the centre the spawn occurs
         let angle = Util.randomFloat(spawnConfig.range[0], spawnConfig.range[1]);
@@ -192,50 +119,47 @@ class FlowProbe {
         this.counters[kind][obj.type].children[obj.name].value++;
     }
 
-    addOrderServiceNode(id) {
-        this.serviceOrders.addNode(id);
+
+    addService(kind, id) {
+        this.services[kind].addNode(id);
     }
 
-    removeOrderServiceNode() {
-        this.serviceOrders.removeNode();
-    }
-
-    addPaymentServiceNode(id) {
-        this.servicePayments.addNode(id);
-    }
-
-    removePaymentServiceNode() {
-        this.servicePayments.removeNode();
+    removeService(kind) {
+        this.services[kind].removeNode();
     }
 
     journalInfo(statement) {
-        this.journal.addEntry(statement);
+        this.journal.addEntry(Util.randomHash(32), statement);
     }
 
     journalScale(entity, factor) {
-        this.journal.addEntry(`${Util.capitalize(entity)} scale `, factor);
+        this.journal.addEntry(
+            Util.randomHash(32),
+            `${Util.capitalize(entity)} scale-` + (factor < 0 ? 'down' : 'up'),
+            factor
+        );
     }
 
-    handleKeyboardShortcuts = e => {
-        switch (e.key) {
-
-            case "q":   this.rateOrder.mobile += 10;                                       break;
-            case "a":   if (this.rateOrder.mobile > 10) this.rateOrder.mobile -= 10;            break;
-            case "w":   this.rateOrder.desktop += 10;                                      break;
-            case "s":   if (this.rateOrder.desktop > 10) this.rateOrder.desktop -= 10;          break;
-            case "e":   this.rateOrder.retail += 10;                                       break;
-            case "d":   if (this.rateOrder.retail > 10) this.rateOrder.retail -= 10;            break;
-
-            case "p":   this.ratePayment.cards += 10;                                           break;
-            case "l":   if (this.ratePayment.cards > 10) this.ratePayment.cards -= 10;          break;
-            case "o":   this.ratePayment.provider += 10;                                        break;
-            case "k":   if (this.ratePayment.provider > 10) this.ratePayment.provider -= 10;    break;
-            case "i":   this.ratePayment.wallet += 10;                                          break;
-            case "j":   if (this.ratePayment.wallet > 10) this.ratePayment.wallet -= 10;        break;
-
-            default: break;
-        }
-    }
+    // handleKeyboardShortcuts = e => {
+    //     switch (e.key) {
+    //
+    //         case "q":   this.rateOrder.mobile += 10;                                       break;
+    //         case "a":   if (this.rateOrder.mobile > 10) this.rateOrder.mobile -= 10;            break;
+    //         case "w":   this.rateOrder.desktop += 10;                                      break;
+    //         case "s":   if (this.rateOrder.desktop > 10) this.rateOrder.desktop -= 10;          break;
+    //         case "e":   this.rateOrder.retail += 10;                                       break;
+    //         case "d":   if (this.rateOrder.retail > 10) this.rateOrder.retail -= 10;            break;
+    //
+    //         case "p":   this.ratePayment.cards += 10;                                           break;
+    //         case "l":   if (this.ratePayment.cards > 10) this.ratePayment.cards -= 10;          break;
+    //         case "o":   this.ratePayment.provider += 10;                                        break;
+    //         case "k":   if (this.ratePayment.provider > 10) this.ratePayment.provider -= 10;    break;
+    //         case "i":   this.ratePayment.wallet += 10;                                          break;
+    //         case "j":   if (this.ratePayment.wallet > 10) this.ratePayment.wallet -= 10;        break;
+    //
+    //         default: break;
+    //     }
+    // }
 
 }
 

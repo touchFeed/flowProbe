@@ -6,7 +6,7 @@ class FPGateway {
 
     // TODO : rename all these to single word
 
-    scaleFont = d3.scaleLinear().domain([0, 100]).range([10, 42]);
+    scaleArcLabel = d3.scaleLinear().domain([0, Config.BLOCK]).range([22, 60]);
 
     entity;                         // name of the entity e.g. orders
     radius;                         // gateway radius
@@ -154,7 +154,7 @@ class FPGateway {
                 .attr("class", "arc-label")
                 .attr("xlink:href", "#radial-line-" + name)
                 .attr("startOffset", `${offset}%`)
-                .attr("font-size", this.scaleFont(percentage))
+                .attr("font-size", this.scaleArcLabel(percentage))
                 .attr("fill", data.color)
                 .attr("alignment-baseline", direction === "north" ? "baseline" : "hanging")
                 .text(data.name);
@@ -387,7 +387,7 @@ class FPGateway {
             .transition()
             .duration(DURATION)
                 .attr("startOffset", d => `${d.offset}%`)
-                .attr("font-size", d => `${this.scaleFont(d.percentage)}`);
+                .attr("font-size", d => `${this.scaleArcLabel(d.percentage)}`);
 
         this.state = snapshot; //                                           should be the last operation
     }

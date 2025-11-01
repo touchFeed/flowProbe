@@ -1,0 +1,15 @@
+{
+    "cards": [
+        "visa",
+        "mastercard"
+    ],
+    "provider": [
+        "paypal",
+        "stripe",
+        "amazon-pay"
+    ],
+    "platform": [
+        "apple-pay",
+        "google-pay"
+    ]
+}

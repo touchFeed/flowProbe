@@ -1,0 +1,14 @@
+{
+    "mobile": [
+        "apple",
+        "android"
+    ],
+    "retail": [
+        "windows",
+        "raspberry-pi"
+    ],
+    "desktop": [
+        "safari",
+        "chrome"
+    ]
+}

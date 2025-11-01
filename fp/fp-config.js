@@ -3,7 +3,7 @@ const { d3 } = window;
 class FpConfig {
 
     static MARGIN = { left: 40, right: 40, top: 40, bottom: 40 };
-    static BLOCK = 120;
+    static BLOCK = 160;
     static WIDTH = d3.select("svg").attr("width");
     static HEIGHT = d3.select("svg").attr("height");
 

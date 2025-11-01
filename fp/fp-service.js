@@ -10,10 +10,9 @@ class FPService {
     svg;
 
     pods;
+    podRadius = Config.BLOCK * .09;
 
     service;
-
-    grid;
 
     xPods;
     yPods;
@@ -100,7 +99,7 @@ class FPService {
             .enter()
             .filter(d => !d.children)
             .append("circle")
-            .attr("r", 10)
+            .attr("r", this.podRadius)
             .attr("class", "pod")
             .attr("transform", (d, i) => this.meshTranslate(d, i))
             .style("fill", service.color);
@@ -108,11 +107,10 @@ class FPService {
         groups
             .append("g")
             .attr("id", "service-caption-" + service.id)
-            .attr("class", "service-caption")
             .append("text")
             .text(service.name)
             .attr("fill", service.color)
-            .attr("class", service.color)
+            .attr("class", "service-caption " + service.color)
             .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK * .09})`)
             .style("text-anchor", "middle");
 
@@ -125,7 +123,7 @@ class FPService {
             .attr("fill", service.color)
             .attr("class", service.id)
             .attr("id", 'throughput-' + service.id)
-            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK})`)
+            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK + 5})`)
             .style("text-anchor", "middle");
 
         groups
@@ -135,7 +133,7 @@ class FPService {
             .text("per sec")
             .attr("fill", service.color)
             .attr("class", service.id)
-            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK * 1.12})`)
+            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK + 22})`)
             .style("text-anchor", "middle");
 
         throughput._current = 0;
@@ -179,13 +177,15 @@ class FPService {
             .style("fill", this.service.color)
             .each(d => console.log(d));
 
+        let r = this.podRadius
 
-        let radiusesAdd = [12, 2, 11, 4, 10];
-        this.transitionRadiuses(radiusesAdd, newPods);
+        // adding service
+        let rAdd = [r * .6, 2, r * .8, 4, r * 1.2, r];
+        this.transitionRadiuses(rAdd, newPods);
 
-        let radiusesRemove = [2, 9, 1, 8, 0];
-
-        let exit = this.transitionRadiuses(radiusesRemove, pods.exit());
+        // removing service
+        let rRemove = [4, r * .9, 2, r * .6, 1, r * .2, 1];
+        let exit = this.transitionRadiuses(rRemove, pods.exit());
         exit.remove();
     }
 
