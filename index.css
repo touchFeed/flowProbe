@@ -1,6 +1,19 @@
-html, body {height:100%;}
-html {display:table; width:100%;}
-body {display:table-cell; text-align:center; vertical-align:middle;}
+html, body {
+    height: 100%;
+    vertical-align: middle;
+}
+
+html {
+    margin: auto;
+}
+
+#header {
+    width: 800px;
+}
+
+body {
+    vertical-align: middle;
+}
 
 text {
     font-family: sans-serif;
@@ -9,6 +22,30 @@ text {
 
 svg {
     padding: 1em;
+}
+
+header {
+    width: 800px;
+    display: flex;
+    justify-content: space-between;
+}
+
+h1 {
+    font-family: "Courier New", serif;
+    font-size: 300%;
+    font-weight: bolder;
+}
+
+h1 img {
+    vertical-align: middle;
+}
+
+#body-wrapper {
+    text-align: center;
+}
+
+#logo {
+    width: 64px;
 }
 
 circle:hover {
@@ -58,14 +95,13 @@ circle:hover {
 }
 
 .service-throughput text {
-    font-size: 32px;
+    font-size: 28px;
 }
 
 .service-throughput-unit text {
-
-    font-size: 12px;
+    font-size: 10px;
     font-weight: lighter;
-
+    color: darkgray;
 }
 
 .service-wrapper {
@@ -79,10 +115,19 @@ circle:hover {
 
 }
 
+#journal .service-name {
+    font-weight: bolder;
+}
+
 #journal text {
     font-weight: normal;
     text-anchor: middle;
     display: block;
+}
+
+#journal text tspan {
+    margin: 1em;
+    border: 1px solid red;
 }
 
 #journal text::first-letter {

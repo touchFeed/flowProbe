@@ -3,36 +3,20 @@ import { FPSimulate as Simulation } from "./fp/fp-simulate.js";
 
 const { d3 } = window;
 
-const svg = d3.select("svg");
-const flowProbe = new FlowProbe(svg);
-
-let fullData = {};
-
-//                                                              report start summary
-
-const printDeltas = counter => {
-    let array = Array.isArray(counter1) ? counter : Object.keys(counter).map(key => counter[key]);
-    array.forEach((kind, k) => {
-        array[k].children
-                .forEach((type, t) => {
-                    console.log(`${kind.name}|${type.name}:`, array[k].children[t].value);
-                })
-        }
-    );
-}
+const svg = d3.select("#tf");
 
 Promise.all([
-    d3.json('data/o_services.json'),
-    d3.json('data/o_orders.json'),
-    d3.json('data/o_payments.json')
+    d3.json('data/services.json'),
+    d3.json('data/orders.json'),
+    d3.json('data/payments.json')
 ])
 .then(([services, orders, payments]) => {
 
-    console.log("All JSON resources loaded. Initialising app.");
-    console.log("FlowProbe started");
+    const flowProbe = new FlowProbe(svg, services);
+    console.log("All data successfully fetched. Starting flowProbe.");
 
-    fullData.orders = orders;
-    fullData.payments = payments;
+    // fullData.orders = orders;
+    // fullData.payments = payments;
 
     flowProbe.initScales();
     flowProbe.submitData(orders, payments);
@@ -58,14 +42,10 @@ Promise.all([
         source.close();
     };
 
-    setInterval(() => {
-        flowProbe.update();
-        // flowProbe.printDeltas();
-    }, 1000);
+    setInterval(() => flowProbe.update(), 1000);
 
     // temporary handles for services
     // Kubernetes style of namespacing pods
-
 });
 
 window.onfocus = () => console.log("focus");

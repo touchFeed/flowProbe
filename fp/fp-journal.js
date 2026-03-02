@@ -1,4 +1,5 @@
 import {FpConfig as Config} from "./fp-config.js";
+import {FpUtil as Util} from "./fp-util.js";
 
 const {d3} = window;
 
@@ -7,8 +8,8 @@ const JOURNAL_SIZE = 3;
 class FPJournal {
 
     scaleOpacity = d3.scaleLinear().domain([0, JOURNAL_SIZE]).range([1, .4]);
-    scaleFontSize = d3.scaleLinear().domain([0, JOURNAL_SIZE]).range([16, 8]);
-    scaleVertical = d3.scaleLinear().domain([0,JOURNAL_SIZE]).range([0, 70]);
+    scaleFontSize = d3.scaleLinear().domain([0, JOURNAL_SIZE]).range([20, 10]);
+    scaleVertical = d3.scaleLinear().domain([0,JOURNAL_SIZE]).range([-10, 80]);
 
     itemKeyFunction = d => d.id;
 
@@ -16,9 +17,10 @@ class FPJournal {
 
     wrapper;
 
-    constructor(svg) {
+    constructor(svg, services) {
         this.svg = svg;
         this.journalItems = [];
+        this.services = services;
     }
 
     drawBase(position) {
@@ -29,7 +31,7 @@ class FPJournal {
             .attr("transform", Config.translate(position.x, 0, position.y, -10));
     }
 
-    addEntry(id, statement, factor) {
+    addEntry(id, statement, factor, entity) {
 
         const scaleVertical = this.scaleVertical;
         const scaleOpacity = this.scaleOpacity;
@@ -40,10 +42,13 @@ class FPJournal {
         items.unshift({
             id: id,
             text: statement,
-            factor: factor
+            factor: factor,
+            entity: entity
         });
 
         if (items.length > 3) items.pop();
+
+        let services = this.services;
 
         this.wrapper.selectAll("text:not(.exit)")
             .data(items, this.itemKeyFunction)
@@ -51,13 +56,25 @@ class FPJournal {
                 enter
                     .append("text")
                     .attr("dx", 0)
-                    .attr("dy", (d, i) => scaleVertical(i) - 20)
+                    .attr("dy", (d, i) => scaleVertical(i) - 30)
                     .attr("fill", "black")
                     .attr("font-size", (d, i) => scaleFontSize(i))
                     .style("opacity", 0)
                     .style("text-anchor", "middle")
-                    .text(d => d.text)
                     .each(function(d){
+                        if (d.factor) {
+                            let entityColor = services[d.entity + "s"].color; // TODO : to-plural convert hack
+                            d3.select(this)
+                                .append("tspan")
+                                .attr("class", "service-name")
+                                .attr("fill", entityColor)
+                                .text(Util.capitalize(entity + "s"));
+                        }
+
+                        d3.select(this)
+                            .append("tspan")
+                            .text(d.text);
+
                         if (d.factor) {
                             let direction = d.factor < 0 ? "down" : "up";
                             let caption = d.factor < 0 ? "▼" : "▲";

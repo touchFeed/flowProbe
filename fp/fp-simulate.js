@@ -55,7 +55,7 @@ class FPSimulate {
         let addService = (entity, count) => {
             this.fp.journalScale(entity, count);
             for (let i = 0; i < count; i++) {
-                setTimeout(() => this.fp.addService(entity, Util.randomHash(10)), i * 1000);
+                setTimeout(() => this.fp.addService(entity, Util.randomHash(10)), i * 2000);
             }
         }
 
@@ -109,7 +109,7 @@ class FPSimulate {
             alterPaymentSmall([ "wallet", "cards"], Quantity.LESS);
             alterOrderLarge([ "desktop" ], Quantity.MORE);
             alterPaymentLarge([ "provider"], Quantity.MORE);
-            this.fp.journalInfo("Usual in-office/on-site transition to desktops.")
+            this.fp.journalInfo("Usual in-office/on-site transition to desktops")
         }, 20_000);
         setTimeout(() => {
             alterOrderSmall([ "desktop" ], Quantity.MORE);
@@ -118,11 +118,11 @@ class FPSimulate {
 
         //                                                              Pre-lunch
         setTimeout(() => {
-            alterOrderTiny([ "retail" ], Quantity.MORE);
-            alterOrderSmall([ "mobile" ], Quantity.MORE);
+            alterOrderTiny([ "retail" ], Quantity.LESS);
+            alterOrderMedium([ "mobile" ], Quantity.MORE);
             alterPaymentTiny([ "wallet"], Quantity.MORE);
-            alterPaymentSmall([ "cards"], Quantity.MORE);
-            this.fp.journalInfo("Pre-lunch spike - movability increase.");
+            alterPaymentMedium([ "cards"], Quantity.LESS);
+            this.fp.journalInfo("Pre-lunch spike - movability increase");
         }, 30_000);
         setTimeout(() => {
             addService("order", 2);
@@ -135,24 +135,29 @@ class FPSimulate {
 
         //                                                              Lunch rush hour
         setTimeout(() => {
-            alterOrderMedium([ "mobile"], Quantity.MORE);
+            alterOrderSmall([ "mobile"], Quantity.MORE);
             alterOrderSmall([ "retail"], Quantity.MORE);
+            alterPaymentSmall([ "wallet"], Quantity.MORE);
+            alterPaymentMedium([ "cards"], Quantity.MORE);
         }, 39_000);
         setTimeout(() => {
+            this.fp.journalInfo("Lunch rush hour by movable hordes")
+        }, 40_000)
+        setTimeout(() => {
+            alterOrderSmall([ "mobile"], Quantity.MORE);
+            alterOrderSmall([ "retail"], Quantity.MORE);
             alterPaymentSmall([ "wallet"], Quantity.MORE);
             alterPaymentMedium([ "cards"], Quantity.MORE);
         }, 41_000);
         setTimeout(() => {
-            this.fp.journalInfo("Lunch rush hour by movable hordes.")
-        }, 42_000)
-        setTimeout(() => {
             addService("order", 3);
-        }, 47_000);
+        }, 45_000);
+        //                                                              Post-lunch correction (no journal)
         setTimeout(() => {
             addService("payment", 3);
-            alterOrderSmall([ "mobile"], Quantity.MORE); // a small correction
-            alterPaymentSmall([ "cards"], Quantity.MORE); // a small correction
-        }, 48_000);
+            alterOrderSmall([ "mobile"], Quantity.MORE);
+            alterPaymentSmall([ "cards"], Quantity.MORE);
+        }, 47_000);
 
         //                                                              Post-lunch chillout, slowly decrease
         setTimeout(() => {
@@ -196,9 +201,11 @@ class FPSimulate {
             addService("payment", 2);
         }, 90_000);
 
+
+
         //                                                              Into the night, slowly turning off
         setTimeout(() => {
-            this.fp.journalInfo("Evening wave over. Slowly into the night.")
+            this.fp.journalInfo("Evening wave over. Slowly into the night")
             alterOrderMedium([ "retail", "mobile", "desktop" ], Quantity.LESS);
             alterPaymentMedium([ "wallet", "cards", "provider"], Quantity.LESS);
         }, 98_000);

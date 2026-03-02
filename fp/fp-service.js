@@ -22,25 +22,29 @@ class FPService {
     PODS_IN_ROW = 4;
     ROWS = 3;
 
+    constructor(entity, svg, color) {
+        this.entity = entity;
+        this.svg = svg;
+        this.color = color;
+    }
+
     meshTranslate = (d, i) => {
         return `translate(${this.xPods(i)},${this.yPods(i)})`;
     }
 
-    chainTransition = (transition, radius) => {
+    chainTransition = (transition, radius, color) => {
         return transition.transition()
             .duration(400)
             .ease(d3.easeLinear)
             .attr("r", radius)
-    };
-
-    transitionRadiuses = (radiusArray, pods) => {
-        radiusArray.forEach(radius => pods = this.chainTransition(pods, radius));
-        return pods;
+            .attr("fill", () => color);
     }
 
-    constructor(entity, svg) {
-        this.entity = entity;
-        this.svg = svg;
+    makeTransition = (radiusArray, colorArray, pods) => {
+        for (let i = 0; i < radiusArray.length; i++) {
+            pods = this.chainTransition(pods, radiusArray[i], colorArray[i]);
+        }
+        return pods;
     }
 
     appendService(service, position) {
@@ -102,7 +106,7 @@ class FPService {
             .attr("r", this.podRadius)
             .attr("class", "pod")
             .attr("transform", (d, i) => this.meshTranslate(d, i))
-            .style("fill", service.color);
+            .attr("fill", service.color);
 
         groups
             .append("g")
@@ -167,6 +171,7 @@ class FPService {
             .data(data);
 
         let index = data.length - 1;
+        let color = this.service.color;
 
         let newPods = pods
             .enter()
@@ -174,18 +179,21 @@ class FPService {
             .attr("r", 0)
             .attr("class", "pod")
             .attr("transform", d => this.meshTranslate(d, index))
-            .style("fill", this.service.color)
-            .each(d => console.log(d));
+            .attr("fill", color);
+            // .each(d => console.log(d));
 
         let r = this.podRadius
 
         // adding service
-        let rAdd = [r * .6, 2, r * .8, 4, r * 1.2, r];
-        this.transitionRadiuses(rAdd, newPods);
+        let rAdd = [r * .2, r * .8, r * .4, r * .9, r * .6, r];
+        let fillAdd = ["green", color, "green", color, "green", color];
+        // this.transitionRadiuses(rAdd, newPods);
+        this.makeTransition(rAdd, fillAdd, newPods);
 
         // removing service
-        let rRemove = [4, r * .9, 2, r * .6, 1, r * .2, 1];
-        let exit = this.transitionRadiuses(rRemove, pods.exit());
+        let rRemove = [r * .3, r * .9, r * .2, r * .7, r * .1, r * .5, 1];
+        let fillRemove = ["red", color, "red", color, "red", color];
+        let exit = this.makeTransition(rRemove, fillRemove, pods.exit());
         exit.remove();
     }
 

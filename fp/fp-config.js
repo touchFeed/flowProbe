@@ -3,9 +3,9 @@ const { d3 } = window;
 class FpConfig {
 
     static MARGIN = { left: 40, right: 40, top: 40, bottom: 40 };
-    static BLOCK = 160;
-    static WIDTH = d3.select("svg").attr("width");
-    static HEIGHT = d3.select("svg").attr("height");
+    static BLOCK = 140;
+    static WIDTH = d3.select("#tf").attr("width");
+    static HEIGHT = d3.select("#tf").attr("height");
 
     static X = d3
             .scaleLinear()

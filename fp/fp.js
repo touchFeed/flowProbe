@@ -28,7 +28,7 @@ class FlowProbe {
     y;
     inputSourceScale = d3.scaleLinear().domain([0, 50]).range([2, 12]);
 
-    constructor(svg) {
+    constructor(svg, entityColors) {
         this.svg = svg;
 
         // main area (excluding margins)
@@ -39,11 +39,11 @@ class FlowProbe {
         this.height = height - margin.top - margin.bottom;
 
         // create Orders & Payments arrangement
-        this.journal = new Journal(svg);
+        this.journal = new Journal(svg, entityColors);
         this.gateways.order = new Gateway("orders", svg);
         this.gateways.payment = new Gateway("payments", svg);
-        this.services.order = new Service("orders", svg);
-        this.services.payment = new Service("payments", svg);
+        this.services.order = new Service("orders", svg, entityColors.orders.color);
+        this.services.payment = new Service("payments", svg, entityColors.payments.color);
 
         console.log(`Constructed fP skeleton as ${width}x${height}`);
     }
@@ -135,8 +135,9 @@ class FlowProbe {
     journalScale(entity, factor) {
         this.journal.addEntry(
             Util.randomHash(32),
-            `${Util.capitalize(entity)} scale-` + (factor < 0 ? 'down' : 'up'),
-            factor
+            " scale",
+            factor,
+            entity
         );
     }
 
