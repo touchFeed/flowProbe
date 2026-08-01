@@ -87,19 +87,14 @@ body {
     justify-content: left;
 }
 
+#version strong {
+    padding-right: 6px;
+}
+
 #author {
     justify-content: right;
 }
 
-
-
-
-
-
-circle:hover {
-    transition: stroke-width 0.3s;
-    stroke-width: 6px;
-}
 
 .arc {
     stroke-width: 5px;
