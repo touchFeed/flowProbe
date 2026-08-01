@@ -25,7 +25,7 @@ target/
 # JetBrains IDE
 /.idea/
 .idea/
-*.iml
+**/**.iml
 
 # Unit test reports
 TEST*.xml
@@ -48,3 +48,9 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+# Temporary
+d3.min.js
+
+# AI related
+.mcp.json

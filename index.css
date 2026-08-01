@@ -1,52 +1,100 @@
-html, body {
-    height: 100%;
-    vertical-align: middle;
-}
-
-html {
-    margin: auto;
-}
-
-#header {
-    width: 800px;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    vertical-align: middle;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #fff;
 }
 
-text {
-    font-family: sans-serif;
-    font-weight: 600;
+.header, .footer {
+    width: 900px;
+    margin: 0 auto;
 }
 
-svg {
-    padding: 1em;
-}
-
-header {
-    width: 800px;
+/* Header */
+.header {
     display: flex;
     justify-content: space-between;
+    gap: 20px;
 }
 
-h1 {
-    font-family: "Courier New", serif;
-    font-size: 300%;
-    font-weight: bolder;
-}
-
-h1 img {
-    vertical-align: middle;
-}
-
-#body-wrapper {
-    text-align: center;
+.header .box {
+    flex: 1;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-weight: bold;
 }
 
 #logo {
-    width: 64px;
+    justify-content: left;
+    padding-left: 6px;
 }
+
+#logo img {
+    width: 60px;
+}
+
+#logo h1 {
+    padding-left: 6px;
+}
+
+#github {
+    justify-content: right;
+}
+
+#github img {
+    width: 32px;
+}
+
+/* Main */
+.main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    /*border-top: 1px dashed #000;*/
+    /*border-bottom: 1px dashed #000;*/
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer .box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+#version {
+    justify-content: left;
+}
+
+#author {
+    justify-content: right;
+}
+
+
+
+
+
 
 circle:hover {
     transition: stroke-width 0.3s;
@@ -71,7 +119,7 @@ circle:hover {
 }
 
 .service-caption {
-    font-size: 1.3em;
+    font-size: 80%;
 }
 
 .gateway-icon {
@@ -144,7 +192,6 @@ circle:hover {
     color: red;
     fill: red;
 }
-
 
 #raspberrypi {
     stroke: black;

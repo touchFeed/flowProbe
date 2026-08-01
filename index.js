@@ -15,9 +15,6 @@ Promise.all([
     const flowProbe = new FlowProbe(svg, services);
     console.log("All data successfully fetched. Starting flowProbe.");
 
-    // fullData.orders = orders;
-    // fullData.payments = payments;
-
     flowProbe.initScales();
     flowProbe.submitData(orders, payments);
     flowProbe.drawOrdersAndPaymentsSample(orders, payments, services);
@@ -47,6 +44,8 @@ Promise.all([
     // temporary handles for services
     // Kubernetes style of namespacing pods
 });
+
+ // TODO handling failed data download ?
 
 window.onfocus = () => console.log("focus");
 window.onblur = () => console.log("blur");
