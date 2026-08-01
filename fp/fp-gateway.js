@@ -251,7 +251,7 @@ class FPGateway {
                 .attr("transform", d => `translate(-${distance(d)},-${distance(d)})`)
                 .attr("x", d => d.point[0])
                 .attr("y", d => d.point[1])
-                .attr("xlink:href", d => `/img/${d.name}.png`);
+                .attr("xlink:href", d => `img/${d.name}.png`);
 
         //                                                                  Radial line (anchor to texts)
         gatewayElement
