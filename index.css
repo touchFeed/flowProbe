@@ -47,6 +47,7 @@ body {
 
 #logo h1 {
     padding-left: 6px;
+    font: bold 32px "Arial Black";
 }
 
 #github {
@@ -93,7 +94,23 @@ body {
 
 #author {
     justify-content: right;
+    font-size: 80%;
 }
+
+#author a {
+    vertical-align: center;
+
+}
+
+#author-logo {
+    height: 32px;
+}
+
+
+#author-name {
+    height: 18px;
+}
+
 
 
 .arc {
