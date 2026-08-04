@@ -1,18 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!-- Elementary -->
     <meta charset="UTF-8" />
     <title>flowProbe</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link href="index.css" rel="stylesheet"/>
+
+    <!-- Google Tag -->
+    <!--suppress EqualityComparisonWithCoercionJS -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W2N96PKX');</script>
+
+    <!-- d3.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"
             integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw=="
             crossorigin="anonymous"
             referrerpolicy="no-referrer">
     </script>
-    <link href="index.css" rel="stylesheet"/>
-    <script src="index.js"></script>
+
 </head>
 <body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W2N96PKX"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <header class="header">
         <div id="logo" class="box">
@@ -40,6 +59,7 @@
         </div>
     </footer>
 
+    <!-- flowProbe : actual panting/d3.js logic lies in modules of "fp" folder, index.js is start-point & data wiring -->
     <script type="module" src="index.js"></script>
 
 </body>
