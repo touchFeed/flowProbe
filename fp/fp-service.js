@@ -137,7 +137,7 @@ class FPService {
             .text("per sec")
             .attr("fill", service.color)
             .attr("class", service.id)
-            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK + 22})`)
+            .attr("transform", `translate(${Config.BLOCK * .5},${Config.BLOCK + 20})`)
             .style("text-anchor", "middle");
 
         throughput._current = 0;

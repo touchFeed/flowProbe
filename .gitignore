@@ -52,5 +52,7 @@ Thumbs.db
 # Temporary
 d3.min.js
 
-# AI related
+# AI turned off - to be pushed soon
+CLAUDE.md
+.claude
 .mcp.json
