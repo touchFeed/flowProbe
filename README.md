@@ -1,6 +1,6 @@
 # flowProbe
 
-Live visualisation using **d3.js** that visualises flow of data around two entities (e.g. `Orders` and `Payments`) from their respective sources (logos in the arcs) to their respective services (circle in the centre) which display the current scaling (a node/circle grid). 
+Live visualisation using **d3.js** that visualises flow of data (spawning circles) around two entities (e.g. `Orders` and `Payments`) from their respective sources (logos in the arcs) to their respective services (circle in the centre) which display the current scaling (a node/circle grid). 
 Each service displays the current per-sec rate of the flow. 
 
 ![](assets/flowProbe.png)
