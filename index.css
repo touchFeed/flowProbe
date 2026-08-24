@@ -48,6 +48,7 @@ body {
 #logo h1 {
     padding-left: 6px;
     font: bold 32px "Arial Black";
+    letter-spacing: 4px;
 }
 
 #github {
