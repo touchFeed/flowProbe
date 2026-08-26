@@ -4,8 +4,8 @@ class FpConfig {
 
     static MARGIN = { left: 40, right: 40, top: 40, bottom: 40 };
     static BLOCK = 140;
-    static WIDTH = d3.select("#tf").attr("width");
-    static HEIGHT = d3.select("#tf").attr("height");
+    static WIDTH = d3.select("#fp").attr("width");
+    static HEIGHT = d3.select("#fp").attr("height");
 
     static X = d3
             .scaleLinear()

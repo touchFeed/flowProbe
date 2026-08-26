@@ -3,7 +3,7 @@ import { FPSimulate as Simulation } from "./fp/fp-simulate.js";
 
 const { d3 } = window;
 
-const svg = d3.select("#tf");
+const svg = d3.select("#fp");
 
 Promise.all([
     d3.json('data/services.json'),
